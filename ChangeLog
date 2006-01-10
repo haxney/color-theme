@@ -1,5 +1,13 @@
 2006-01-10  Brian Palmer  <bpalmer@gmail.com>
 
+	* color-theme-library.el: Added color-theme-library.el, containing
+	the defined themes.
+	* color-theme.el (color-theme-libraries): Customizable variable.
+ 	* color-theme.el (color-theme-initialize): Load each file
+	specified in color-theme-libraries.
+
+2006-01-10  Brian Palmer  <bpalmer@gmail.com>
+
 	* Added color-theme.el 6.5.5 to the repository.
 	* Added ChangeLog to the repository.
 
