@@ -1,3 +1,7 @@
+2006-01-13  Xavier Maillard  <zedek@gnu.org>
+
+	* color-theme.el: Changed copyright header (just to test Gna services)
+
 2006-01-10  Brian Palmer  <bpalmer@gmail.com>
 
 	* color-theme-library.el: Added color-theme-library.el, containing
