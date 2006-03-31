@@ -1,3 +1,14 @@
+2006-03-31  Brian Palmer  <bpalmer@gmail.com>
+
+	* color-theme-library.el (color-theme-renegade): Added new theme
+	by Dave Benjamin. Thanks Dave.
+
+	* color-theme.el (color-theme-select): Call
+	color-theme-initialized if it has not been called before.
+	(color-theme-initialized): Variable tracking initialization state, used in color-theme-select
+	(color-themes): Added renegade theme by Dave Benjamin. Thanks Dave.
+	
+
 2006-01-13  Xavier Maillard  <zedek@gnu.org>
 
 	* color-theme.el: Changed copyright header (just to test Gna services)
