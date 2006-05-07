@@ -392,6 +392,18 @@ nil means that no history is maintained."
 This counts how many themes were installed, regardless
 of `color-theme-history-max-length'.")
 
+(defvar color-theme-entry-path (cond
+                                ;; Emacs 22.x and later
+                                ((lookup-key global-map [menu-bar tools])
+                                 '("tools"))
+                                ;; XEmacs
+                                ((featurep 'xemacs)
+                                 (setq tool-entry '("Tools")))
+                                ;; Emacs < 22
+                                (t
+                                 '("Tools")))
+  "Menu tool entry path.")
+
 (defun color-theme-add-to-history (name)
   "Add color-theme NAME to `color-theme-history'."
   (setq color-theme-history
@@ -590,10 +602,10 @@ libraries are mainly useful for color theme authors."
   (set-buffer-modified-p nil)
   (color-theme-mode))
 
-(require 'easymenu)
-(easy-menu-add-item nil '("Tools") "--")
-(easy-menu-add-item  nil '("Tools")
-  ["Color Themes" color-theme-select t])
+(when (require 'easymenu)
+  (easy-menu-add-item nil color-theme-entry-path "--")
+  (easy-menu-add-item  nil color-theme-entry-path
+                       ["Color Themes" color-theme-select t]))
 
 (defun color-theme-mode ()
   "Major mode to select and install color themes.
