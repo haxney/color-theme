@@ -1,3 +1,9 @@
+2006-05-07  Xavier Maillard  <zedek@gnu.org>
+
+	* color-theme.el (color-theme-entry-path): New variable used for easymenu definition.
+	    We now check which (x)emacs version is used to correctly define our menu.
+	    (Fixes a long standing bug)
+
 2006-03-31  Brian Palmer  <bpalmer@gmail.com>
 
 	* color-theme-library.el (color-theme-renegade): Added new theme
