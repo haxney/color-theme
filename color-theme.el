@@ -191,7 +191,7 @@
 ;; frame could be changed independently.  In Emacs 21, this is no longer
 ;; true.  New color themes will not be made backwards compatible.
 ;;
-;; This release was superficially tested with Emacs 21.2 and XEmacs 21.4.
+;; This release was superficially tested with Emacs 21.x/22.x and XEmacs 21.4.
 
 
 
@@ -215,7 +215,8 @@
 	    (not (facep 'tool-bar)))
        (put 'tool-bar 'face-alias 'toolbar)))
 
-(defvar color-theme-xemacs-p (string-match "XEmacs" emacs-version)
+(defvar color-theme-xemacs-p (and (featurep 'xemacs) 
+                                  (string-match "XEmacs" emacs-version))
   "Non-nil if running XEmacs.")
 
 ;; face-attr-construct has a problem in Emacs 20.7 and older when
@@ -235,8 +236,12 @@
 ;; That's why we depend on cus-face.el functionality.
 
 (cond ((fboundp 'custom-face-attributes-get)
-       (defalias 'color-theme-face-attr-construct
-	 'custom-face-attributes-get))
+       (defun color-theme-face-attr-construct
+         (if (atom face)
+             (custom-face-attributes-get face frame)
+             (if (and (consp face) (eq (car face) 'quote))
+                 (custom-face-attributes-get (cadr face) frame)
+                 (custom-face-attributes-get (car face) frame)))))
       ((fboundp 'face-custom-attributes-get)
        (defalias 'color-theme-face-attr-construct
 	 'face-custom-attributes-get))
