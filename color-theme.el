@@ -236,12 +236,12 @@
 ;; That's why we depend on cus-face.el functionality.
 
 (cond ((fboundp 'custom-face-attributes-get)
-       (defun color-theme-face-attr-construct
+       (defun color-theme-face-attr-construct (face frame)
          (if (atom face)
-             (custom-face-attributes-get face frame)
-             (if (and (consp face) (eq (car face) 'quote))
-                 (custom-face-attributes-get (cadr face) frame)
-                 (custom-face-attributes-get (car face) frame)))))
+              (custom-face-attributes-get face frame)
+              (if (and (consp face) (eq (car face) 'quote))
+                  (custom-face-attributes-get (cadr face) frame)
+                  (custom-face-attributes-get (car face) frame)))))
       ((fboundp 'face-custom-attributes-get)
        (defalias 'color-theme-face-attr-construct
 	 'face-custom-attributes-get))
