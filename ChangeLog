@@ -1,3 +1,10 @@
+2006-05-11  Xavier Maillard  <zedek@gnu.org>
+
+	* color-theme.el (color-theme-xemacs-p): Check for xemacs feature.
+	(color-theme-face-attr-construct): New function. Use it when
+		face-custom-attributes-get is bound. Fixes a bug on M-x
+		color-theme-select.
+
 2006-05-07  Xavier Maillard  <zedek@gnu.org>
 
 	* color-theme.el (color-theme-entry-path): New variable used for easymenu definition.
