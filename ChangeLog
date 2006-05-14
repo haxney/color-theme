@@ -1,3 +1,9 @@
+2006-05-14  Xavier Maillard  <zedek@gnu.org>
+
+	* color-theme.el: Cosmetic changes
+
+	* color-theme-library.el: Ditto (added header, legal notice)
+
 2006-05-11  Xavier Maillard  <zedek@gnu.org>
 
 	* color-theme.el (color-theme-xemacs-p): Check for xemacs feature.
