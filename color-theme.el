@@ -10,7 +10,7 @@
 ;; Maintainer: Xavier Maillard <zedek@gnu.org>
 ;; URL: http://www.emacswiki.org/cgi-bin/wiki.pl?ColorTheme
 
-;; This file is not part of GNU Emacs.
+;; This file is not (YET) part of GNU Emacs.
 
 ;; This is free software; you can redistribute it and/or modify it under
 ;; the terms of the GNU General Public License as published by the Free
@@ -123,6 +123,7 @@
 ;; Gordon Messmer <gordon@dragonsdawn.net> for ideas and discussion.
 ;; Sriram Karra <karra@cs.utah.edu> for the color-theme-submit stuff.
 ;; Olgierd `Kingsajz' Ziolko <kingsajz@rpg.pl> for the spec-filter idea.
+;; Brian Palmer for color-theme-library ideas and code
 ;; All the users that contributed their color themes.
 
 ;;; Bugs:
@@ -238,10 +239,10 @@
 (cond ((fboundp 'custom-face-attributes-get)
        (defun color-theme-face-attr-construct (face frame)
          (if (atom face)
-              (custom-face-attributes-get face frame)
-              (if (and (consp face) (eq (car face) 'quote))
-                  (custom-face-attributes-get (cadr face) frame)
-                  (custom-face-attributes-get (car face) frame)))))
+             (custom-face-attributes-get face frame)
+             (if (and (consp face) (eq (car face) 'quote))
+                 (custom-face-attributes-get (cadr face) frame)
+                 (custom-face-attributes-get (car face) frame)))))
       ((fboundp 'face-custom-attributes-get)
        (defalias 'color-theme-face-attr-construct
 	 'face-custom-attributes-get))
@@ -1729,7 +1730,12 @@ to load) into a useful subset that they actually use."
 (defmacro define-color-theme (name author description &rest forms)
   (let ((n name))
     `(progn 
-       (add-to-list 'color-themes (list ',n (upcase-initials (replace-in-string (replace-in-string (symbol-name ',n) "^color-theme-" "") "-" " ")) ,author))
+       (add-to-list 'color-themes
+                    (list ',n
+                          (upcase-initials
+                           (replace-in-string
+                            (replace-in-string (symbol-name ',n) "^color-theme-" "") "-" " "))
+                          ,author))
        (defun ,n ()
 	 ,description
 	 (interactive)
