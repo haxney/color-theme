@@ -27,6 +27,8 @@
 ;; MA 02111-1307, USA.
 
 ;; Code:
+(eval-when-compile
+  (require 'color-theme))
 
 (defun color-theme-gnome ()
   "Wheat on darkslategrey scheme.
