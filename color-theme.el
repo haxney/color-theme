@@ -197,6 +197,10 @@
 
 
 ;;; Code:
+(eval-when-compile
+  (require 'easymenu)
+  (require 'reporter)
+  (require 'sendmail))
 
 (require 'cl); set-difference is a function...
 
@@ -264,7 +268,7 @@ a plist.  In XEmacs, the alist is deprecated; a plist is used instead."
 	 plist)
 	((not (symbolp (car plist)))
 	 (error "Wrong type argument: plist, %S" plist))
-	(t
+	((featurep 'xemacs)
 	 (plist-to-alist plist)))); XEmacs only
 
 ;; Customization
@@ -603,7 +607,7 @@ libraries are mainly useful for color theme authors."
 	(put-text-property 0 (length name) 'mouse-face 'highlight desc)
 	(insert desc)
 	(newline))))
-  (beginning-of-buffer)
+  (goto-char (point-min))
   (setq buffer-read-only t)
   (set-buffer-modified-p nil)
   (color-theme-mode))
@@ -1090,6 +1094,7 @@ Example:
     (setq buffer-read-only nil)
     (erase-buffer))
   ;; insert defun
+  (insert "(eval-when-compile\n(require 'color-theme))")
   (color-theme-print-theme 'my-color-theme
 			   (concat "Color theme by "
 				   (if (string= "" user-full-name)
@@ -1351,6 +1356,7 @@ The snapshot is created via `color-theme-snapshot'."
 This is only necessary for XEmacs, because in Emacs 21 changing the
 frame paramters automatically affects the relevant faces.")
 
+;; fixme: silent the bytecompiler with set-face-property
 (defun color-theme-frob-faces (params)
   "Change certain faces according to PARAMS.
 This uses `color-theme-frame-param-frobbing-rules'."
@@ -1619,7 +1625,7 @@ a difference."
 
 
 ;;; Installing a color theme
-
+;;;###autoload
 (defun color-theme-install (theme)
   "Install a color theme defined by frame parameters, variables and faces.
 
