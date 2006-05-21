@@ -568,6 +568,7 @@ startup."
 				color-theme-legal-frame-parameters))))
 (add-hook 'after-init-hook 'color-theme-backup-original-values)
 
+;;;###autoload
 (defun color-theme-select (&optional arg)
   "Displays a special buffer for selecting and installing a color theme.
 With optional prefix ARG, this buffer will include color theme libraries
@@ -668,6 +669,7 @@ The color themes are listed in `color-themes', which see."
 
 ;;; Commands in Color Theme Selection mode
 
+;;;###autoload
 (defun color-theme-describe ()
   "Describe color theme listed at point.
 This shows the documentation of the value of text-property color-theme
@@ -676,6 +678,7 @@ function.  See `color-themes'."
   (interactive)
   (describe-function (get-text-property (point) 'color-theme)))
 
+;;;###autoload
 (defun color-theme-install-at-mouse (event)
   "Install color theme clicked upon using the mouse.
 First argument EVENT is used to set point.  Then
@@ -685,6 +688,7 @@ First argument EVENT is used to set point.  Then
     (mouse-set-point event)
     (color-theme-install-at-point)))
 
+;;;autoload
 (defun color-theme-install-at-point ()
   "Install color theme at point.
 This calls the value of the text-property `color-theme' at point.
@@ -705,6 +709,7 @@ See `color-themes'."
 	(delete-overlay o))
       (goto-address))))
 
+;;;###autoload
 (defun color-theme-install-at-point-for-current-frame ()
   "Install color theme at point for current frame only.
 Binds `color-theme-is-global' to nil and calls
@@ -1056,9 +1061,12 @@ the list of faces and their specs."
   (color-theme-print-alist vars)
   ;; remaining elements of snapshot: face specs
   (color-theme-print-faces faces)
-  (insert ")))")
+  (insert ")))\n")
+  (insert "(add-to-list 'color-themes '(" (symbol-name func) " "
+          " \"THEME NAME\" \"YOUR NAME\"))")
   (goto-char (point-min)))
 
+;;;###autoload
 (defun color-theme-print (&optional buf)
   "Print the current color theme function.
 
@@ -1094,7 +1102,8 @@ Example:
     (setq buffer-read-only nil)
     (erase-buffer))
   ;; insert defun
-  (insert "(eval-when-compile\n(require 'color-theme))")
+  (insert "(eval-when-compile"
+          "    (require 'color-theme))\n")
   (color-theme-print-theme 'my-color-theme
 			   (concat "Color theme by "
 				   (if (string= "" user-full-name)
@@ -1272,6 +1281,7 @@ If REGEXP is given, this is only done if faces contains a match for regexps."
 ;;        '((blue ((t (:foreground "blue"))))
 ;; 	 (bold ((t (:bold t :height 1.0))))))
 
+;;;###autoload
 (defun color-theme-analyze-defun ()
   "Once you have a color-theme printed, check for missing faces.
 This is used by maintainers who receive a color-theme submission
@@ -1327,6 +1337,7 @@ author."
 
 (defun color-theme-snapshot nil)
 
+;;;###autoload
 (defun color-theme-make-snapshot ()
   "Return the definition of the current color-theme.
 The function returned will recreate the color-theme in use at the moment."
@@ -1571,6 +1582,7 @@ alist.  Membership will be tested using `assq'."
 ;; (color-theme-merge-alists '((a . 1) (b . 2)) '((c . 3) (d . 4)))
 ;; (color-theme-merge-alists '((a . 1) (b . 2)) '((c . 3) (d . 4) (b . 5)))
 
+;;;###autoload
 (defun color-theme-compare (theme-a theme-b)
   "Compare two color themes.
 This will print the differences between installing THEME-A and
@@ -1670,7 +1682,7 @@ frame-parameter settings of previous color themes."
 
 
 ;; Sharing your stuff
-
+;;;###autoload
 (defun color-theme-submit ()
   "Submit your color-theme to the maintainer."
   (interactive)
@@ -1748,7 +1760,8 @@ to load) into a useful subset that they actually use."
 	 (color-theme-install
 	  ,@forms)))))
 
-
+;;; FIXME: is this useful ??
+;;;###autoload
 (defun color-theme-initialize ()
   "Initialize the color theme package by loading color-theme-libraries."
   (interactive)
