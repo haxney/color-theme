@@ -1,3 +1,44 @@
+2006-05-27  Xavier Maillard  <zedek@gnu.org>
+
+	* debian: New directory. Contains all stuff to build a neat and
+		  cool color-theme-el Debian package.
+	
+	* AUTHORS: New file.
+
+	* color-theme-autoloads.in: Ditto..
+
+	* Makefile.defs: Ditto.
+
+	* Makefile: Ditto.
+
+	* color-theme.el (replace-in-string): New function. Used in define-color-theme
+	(color-theme-directory): New variable.
+	(color-theme-libraries): Changed default value to color-theme
+		official theme directory
+	(color-theme-load-all-themes): New variable.
+	(color-theme-initialize): Load theme files defined either in
+		color-theme-libraries or color-theme-directory.
+
+2006-05-22  Xavier Maillard  <zedek@gnu.org>
+
+	* color-theme-library.el: make bytecompiler happy.
+
+	* color-theme.el (color-theme-initialize, color-theme-select)
+	(color-theme-describe, color-theme-install-at-mouse)
+	(color-theme-install-at-point)
+	(color-theme-install-at-point-for-current-frame)
+	(color-theme-print, color-theme-analyze-defun)
+	(color-theme-make-snapshot, color-theme-compare)
+	(color-theme-submit, color-theme-initialize): Added autoload cookies
+
+	* COPYING: New file
+
+2006-05-21  Xavier Maillard  <zedek@gnu.org>
+
+	* color-theme.el: Make byte compiler happy.
+	Added autoload cookie on color-theme-install (useless ??)
+	Added eval-when-compile in color-theme-print
+
 2006-05-14  Xavier Maillard  <zedek@gnu.org>
 
 	* color-theme.el: Cosmetic changes
