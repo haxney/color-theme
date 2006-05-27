@@ -6,6 +6,8 @@
 ;; Modified by Dirk Eddelbuettel <edd@debian.org>
 ;; Adapted for dh-make by Jim Van Zandt <jrv@vanzandt.mv.com>
 
+;; Modifed by Xavier Maillard <zedek@gnu.org>
+
 ;; The color-theme-el package follows the Debian/GNU Linux
 ;; 'emacsen' policy and byte-compiles its elisp files for each 'emacs
 ;; flavor' (emacs19, xemacs19, emacs20, xemacs20...).  The compiled
@@ -16,16 +18,12 @@
   (message "Package color-theme-el removed but not purged.  Skipping setup."))
  ((not (file-exists-p (concat "/usr/share/"
                               (symbol-name debian-emacs-flavor)
-                              "/site-lisp/color-theme-el/color-theme-autoloads.elc")))
+                              "/site-lisp/color-theme-el/color-theme-autoloads.el")))
   (message "Package color-theme-el not fully installed.  Skipping setup."))
  (t
-  (debian-pkg-add-load-path-item
-   (concat "/usr/share/"
-           (symbol-name debian-emacs-flavor)
-           "/site-lisp/color-theme-el"))
-  (debian-pkg-add-load-path-item
-   (concat "/usr/share/"
-           (symbol-name debian-emacs-flavor)
-           "/site-lisp/color-theme-el/themes"))
-  (require 'color-theme)))
-;;(color-theme-initialize)
+  (when (fboundp 'debian-pkg-add-load-path-item)
+    (debian-pkg-add-load-path-item (concat "/usr/share/"
+                                           (symbol-name flavor)
+                                           "/site-lisp/color-theme-el")))
+
+  (load "color-theme-autoloads.el")))
