@@ -1,17 +1,25 @@
 #!/usr/bin/make -f
 # -*- makefile -*-
+
 # Sample debian/rules that uses debhelper.
 # This file was originally written by Joey Hess and Craig Small.
 # As a special exception, when this file is copied by dh-make into a
 # dh-make output file, you may use that output file without restriction.
 # This special exception was added by Craig Small in version 0.37 of dh-make.
 
+
+LANG=C
+LC_CTYPE=C
+
 # Uncomment this to turn on verbose mode.
 #export DH_VERBOSE=1
+
+# General variables
 PACKAGE = color-theme-el
 PKGDIR  = debian/${PACKAGE}
 DOCDIR  = /usr/share/doc/${PACKAGE}
 LISPDIR = /usr/share/emacs/site-lisp/${PACKAGE}
+
 
 configure: configure-stamp
 configure-stamp:
@@ -24,7 +32,7 @@ build: build-stamp
 build-stamp: configure-stamp 
 	dh_testdir
 
-	$(MAKE) lisp autoloads
+	$(MAKE) autoloads
 	touch build-stamp
 
 clean:
@@ -36,7 +44,6 @@ clean:
 	dh_clean 
 
 install: build
-	test -e debian/control
 	dh_testdir
 	dh_testroot
 	dh_clean -k 
@@ -44,12 +51,18 @@ install: build
 
 	# Add here commands to install the package into
 	# debian/color-theme-el
-	install -d $(PKGDIR)$(LISPDIR) $(PKGDIR)$(LISPDIR)/themes
-	install -d ${PKGDIR}${DOCDIR}
+	#install -d $(PKGDIR)$(LISPDIR) $(PKGDIR)$(LISPDIR)/themes
+	#install -d ${PKGDIR}${DOCDIR}
 
 	install -m 644 color-theme.el $(PKGDIR)$(LISPDIR)
 	install -m 644 themes/*.el $(PKGDIR)$(LISPDIR)/themes/
 	install -m 644 color-theme-autoloads.el $(PKGDIR)$(LISPDIR)
+
+        # Other documentation
+	install -m 0644 AUTHORS ${PKGDIR}${DOCDIR}/AUTHORS
+#        install -m 0644 NEWS ${PKGDIR}${DOCDIR}/NEWS
+#        install -m 0644 README ${PKGDIR}${DOCDIR}/README
+	install -m 0644 ChangeLog ${PKGDIR}${DOCDIR}/changelog
 
 # Build architecture-independent files here.
 binary-indep: build install
@@ -60,7 +73,7 @@ binary-arch: build install
 	dh_testdir
 	dh_testroot
 	dh_installchangelogs
-	dh_installdocs AUTHORS #COPYING
+	dh_installdocs
 	dh_installemacsen
 	dh_link
 	dh_compress
