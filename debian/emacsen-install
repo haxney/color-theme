@@ -18,10 +18,10 @@ echo install/${PACKAGE}: Handling install for emacsen flavor ${FLAVOR}
 #else
 #    SITEFLAG="--no-site-file"
 #fi
-FLAGS="${SITEFLAG} -q -batch -l path.el -f batch-byte-compile"
 
 ELDIR=/usr/share/emacs/site-lisp/${PACKAGE}
 ELCDIR=/usr/share/${FLAVOR}/site-lisp/${PACKAGE}
+FLAGS="${SITEFLAG} -q -batch -l /tmp/path.el -f batch-byte-compile"
 
 # Install-info-altdir does not actually exist. 
 # Maybe somebody will write it.
@@ -33,18 +33,44 @@ fi
 install -m 755 -d ${ELCDIR}
 install -m 755 -d ${ELCDIR}/themes
 
+# First: process color-theme main files
 cd ${ELDIR}
 FILES=`echo *.el`
 cp ${FILES} ${ELCDIR}
 cp -a ${ELDIR}/themes ${ELCDIR}/
-FILES="$FILES `echo ${ELDIR}/themes/*.el`"
 
 cd ${ELCDIR}
 
-cat << EOF > path.el
-(setq load-path (cons "." load-path) byte-compile-warnings nil)
+cat << EOF > /tmp/path.el
+(setq load-path (cons "${ELCDIR}" load-path) byte-compile-warnings nil)
 EOF
 ${FLAVOR} ${FLAGS} ${FILES}
-rm -f *.el path.el
+rm *.el
+
+## symlink the source files into the ${ELCDIR}
+## so that `find-library' will find them
+for FILE in $FILES ; do
+  echo "Linking $FILE ..."
+  if ! [ -e $FILE ];  then
+  ## note that these will not be 'relative' symlinks.
+    ln -s ${ELDIR}/$FILE .
+  fi
+done
+
+# Then: process color-theme theme files
+cd ${ELDIR}/themes
+FILES=`echo *.el`
+cd ${ELCDIR}/themes
+
+${FLAVOR} ${FLAGS} ${FILES}
+rm -f *.el /tmp/path.el
+
+for FILE in $FILES ; do
+  echo "Linking $FILE ..."
+  if ! [ -e $FILE ];  then
+  ## note that these will not be 'relative' symlinks.
+    ln -s ${ELDIR}/themes/$FILE .
+  fi
+done
 
 exit 0
