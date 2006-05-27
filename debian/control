@@ -1,0 +1,12 @@
+Source: color-theme-el
+Section: editors
+Priority: optional
+Maintainer: Basil Shubin <bashu@surgut.ru>
+Build-Depends-Indep: debhelper (>= 4.0.0)
+Standards-Version: 3.6.2
+
+Package: color-theme-el
+Architecture: all
+Depends: emacs21 | emacsen
+Description: Color themes for Emacs
+ A huge elisp package with more than 50 color themes for your use.

@@ -1,0 +1,19 @@
+emacs-color-themes for Debian
+--------------------------------
+
+The main function to use is 'color-theme-select'. It creates the Color
+Theme Selection buffer that allows you to test the themes before
+choosing one.
+
+	M-x color-theme-select RET
+
+The easiest way is to install a chosen color theme is to call the
+appropriate color theme function. Put the appropriate code in your
+.emacs file:
+
+	(color-theme-gnome2)
+
+Use the `?' in the Color Theme Selection buffer to find the name of
+the appropriate color theme function.
+
+ -- Basil Shubin <bashu@surgut.ru>, Thu Jul  7 19:17:13 2005

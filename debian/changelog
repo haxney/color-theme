@@ -1,0 +1,21 @@
+color-theme-el (6.6.0-1) unstable; urgency=low
+
+  * Added themes for real.
+  * Changed package name to color-theme-el
+
+ -- Xavier Maillard <zedek@gnu.org>  Fri, 26 May 2006 01:05:17 +0200
+
+emacs-color-themes (6.6.0-0) unstable; urgency=low
+
+  * New upstream release
+  * Changed copyright file
+  * Added new directory (themes)
+
+ -- Xavier Maillard <zedek@localhost.localdomain>  Fri, 26 May 2006 01:01:04 +0200
+
+emacs-color-themes (6.5.4-1) unstable; urgency=low
+
+  * Initial Release (Closes: #316814).
+
+ -- Basil Shubin <bashu@surgut.ru>  Mon,  4 Jul 2005 10:11:23 +0700
+
