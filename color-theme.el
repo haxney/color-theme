@@ -224,6 +224,11 @@
                                   (string-match "XEmacs" emacs-version))
   "Non-nil if running XEmacs.")
 
+;; Add this since it appears to miss in emacs-2x
+(or (fboundp 'replace-in-string)
+    (defun replace-in-string (target old new)
+      (replace-regexp-in-string old new  target)))
+
 ;; face-attr-construct has a problem in Emacs 20.7 and older when
 ;; dealing with inverse-video faces.  Here is a short test to check
 ;; wether you are affected.
@@ -351,6 +356,33 @@ only on those frames that are not using a local color theme."
   "*Determines wether new color themes are installed on top of each other.
 If non-nil, installing a color theme will undo all settings made by
 previous color themes."
+  :type 'boolean
+  :group 'color-theme)
+
+(defcustom color-theme-directory nil
+  "Directory where we can find additionnal themes (personnal).
+Note that there is at least one directory shipped with the official
+color-theme distribution where all contributed themes are located.
+This official selection can't be changed with that variable. 
+However, you still can decide to turn it on or off and thus,
+not be shown with all themes but yours."
+  :type '(repeat string)
+  :group 'color-theme)
+
+(defcustom color-theme-libraries (directory-files 
+                                  (concat 
+                                   (file-name-directory (locate-library "color-theme"))
+                                   "/themes") t "^color-theme")
+  "A list of files, which will be loaded in color-theme-initialize. 
+This allows a user to prune the default color-themes (which can take a while
+to load) into a useful subset that they actually use."
+  :type '(repeat string)
+  :group 'color-theme)
+
+(defcustom color-theme-load-all-themes t
+  "When t, load all color-theme theme files
+as presented by `color-theme-libraries'. Else
+do not load any of this themes."
   :type 'boolean
   :group 'color-theme)
 
@@ -1738,13 +1770,7 @@ frame-parameter settings of previous color themes."
 
 
 
-(defcustom color-theme-libraries (list "color-theme-library")
-  "A list of files, which will be loaded in color-theme-initialize. 
-This allows a user to prune the default color-themes (which can take a while
-to load) into a useful subset that they actually use."
-  :type '(repeat string)
-  :group 'color-theme)
-
+;; Use this to define themes
 (defmacro define-color-theme (name author description &rest forms)
   (let ((n name))
     `(progn 
@@ -1752,7 +1778,8 @@ to load) into a useful subset that they actually use."
                     (list ',n
                           (upcase-initials
                            (replace-in-string
-                            (replace-in-string (symbol-name ',n) "^color-theme-" "") "-" " "))
+                            (replace-in-string 
+                             (symbol-name ',n) "^color-theme-" "") "-" " "))
                           ,author))
        (defun ,n ()
 	 ,description
@@ -1760,13 +1787,29 @@ to load) into a useful subset that they actually use."
 	 (color-theme-install
 	  ,@forms)))))
 
+
+(defcustom color-theme-theme '(color-themes)
+  "Regexp that matches frame parameter names.
+Only frame parameter names that match this regexp can be changed as part
+of a color theme."
+  :type '()
+  :options color-themes
+  :group 'color-theme
+  :link '(info-link "(elisp)Window Frame Parameters"))
+
 ;;; FIXME: is this useful ??
 ;;;###autoload
 (defun color-theme-initialize ()
   "Initialize the color theme package by loading color-theme-libraries."
   (interactive)
-  (dolist (library color-theme-libraries)
-    (load library)))
+  (when color-theme-directory
+    (push (directory-files color-theme-directory t "^color-theme") color-theme-libraries))
+  (cond ((and (not color-theme-load-all-themes)
+              color-theme-directory)
+         (push (directory-files color-theme-directory t "^color-theme") color-theme-libraries))
+        (t 
+         (dolist (library color-theme-libraries)
+           (load library)))))
 
 ;; TODO: I don't like all those function names cluttering up my namespace.
 ;; Instead, a hashtable for the color-themes should be created. Now that 
