@@ -87,10 +87,9 @@ distclean:
 	-rm  $(MANUAL).info $(MANUAL).html $(TARGET)
 	-rm -Rf ../$(DISTDIR)
 	-rm -f debian/dirs debian/files
-	-rm -rf $(DISTDIR) $(TARBALL) `basename $(TARBALL) .gz`
+	-rm -rf $(DISTDIR) $(TARBALL)* $(ZIPFILE)* $(DEBNAME)*
 
 dist: distclean Makefile
-	-rm -fr ../$(PROJECT)-$(VERSION)/debian ../$(PROJECT)-$(VERSION)/test
 	$(MAKE) dist-prepare
 
 # Idea taken from w3m-el
@@ -98,14 +97,12 @@ dist-prepare: CVS/Root CVS/Repository
 	cvs -d $(CVSROOT) -w export -d $(DISTDIR) -r $(CVSBRANCH) $(CVSMODULE)
 	-cvs diff |( cd $(DISTDIR) && patch -p0 )
 
-tarball: dist
+$(TARBALL): tarball
+$(DEBNAME): debian
 
-        # for f in BUGS.ja w3m-e22.el; do\
-#           if [ -f $(DISTDIR)/$${f} ]; then\
-#             rm -f $(DISTDIR)/$${f} || exit 1;\
-#           fi;\
-#         done  
+tarball: dist
 	find $(DISTDIR) -name .cvsignore | xargs rm -f
+	find $(DISTDIR) -name debian | xargs rm -fr
 	find $(DISTDIR) -type d | xargs chmod 755
 	find $(DISTDIR) -type f | xargs chmod 644
 
@@ -114,7 +111,6 @@ tarball: dist
 	zip -r $(ZIPFILE) $(DISTDIR)
 	gpg --detach $(TARBALL)
 	gpg --detach $(ZIPFILE)
-	rm -rf $(DISTDIR)
 
 debian: dist
 	(cd $(DISTDIR) && \
@@ -124,13 +120,17 @@ debian: dist
 	  lintian -i ../$(DEBNAME)*.deb || : && \
 	  echo "Done running lintian." && \
 	  debsign)
-	-rm -fr $(DISTDIR)
+
 	cp $(DEBNAME)* /var/spool/repo
 	(cd /var/spool/repo && \
 	dpkg-scanpackages . /dev/null | gzip -9 > Packages.gz && \
 	dpkg-scansources . | gzip -9 > Sources.gz)
 
-upload: 
+release: $(DEBNAME) $(TARBALL)
+	rm -rf $(DISTDIR)
+	$(MAKE) upload distclean
+
+upload:
 	(cd /var/spool/repo && echo open perso.nerim.net > upload.lftp ; \
 	  echo cd /var/spool/repo >> upload.lftp ; \
 	  echo mput * >> upload.lftp ; \
@@ -139,6 +139,3 @@ upload:
 	  rm -f upload.lftp)
 	(scp $(ZIPFILE)* $(TARBALL)* \
             zeDek@download.gna.org:/upload/color-theme)
-
-release: debian tarball
-	$(MAKE) upload
