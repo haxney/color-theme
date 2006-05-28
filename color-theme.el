@@ -373,9 +373,10 @@ not be shown with all themes but yours."
                                   (concat 
                                    (file-name-directory (locate-library "color-theme"))
                                    "/themes") t "^color-theme")
-  "A list of files, which will be loaded in color-theme-initialize. 
+  "A list of files, which will be loaded in color-theme-initialize depending
+on `color-theme-load-all-themes' value. 
 This allows a user to prune the default color-themes (which can take a while
-to load) into a useful subset that they actually use."
+to load)."
   :type '(repeat string)
   :group 'color-theme)
 
@@ -1784,33 +1785,30 @@ frame-parameter settings of previous color themes."
        (defun ,n ()
 	 ,description
 	 (interactive)
-	 (color-theme-install
-	  ,@forms)))))
+         ,@forms))))
 
-
-(defcustom color-theme-theme '(color-themes)
-  "Regexp that matches frame parameter names.
-Only frame parameter names that match this regexp can be changed as part
-of a color theme."
-  :type '()
-  :options color-themes
-  :group 'color-theme
-  :link '(info-link "(elisp)Window Frame Parameters"))
 
 ;;; FIXME: is this useful ??
 ;;;###autoload
 (defun color-theme-initialize ()
   "Initialize the color theme package by loading color-theme-libraries."
   (interactive)
-  (when color-theme-directory
-    (push (directory-files color-theme-directory t "^color-theme") color-theme-libraries))
+
   (cond ((and (not color-theme-load-all-themes)
               color-theme-directory)
-         (push (directory-files color-theme-directory t "^color-theme") color-theme-libraries))
-        (t 
-         (dolist (library color-theme-libraries)
-           (load library)))))
+         (setq color-theme-libraries 
+               (directory-files color-theme-directory t "^color-theme")))
+        (color-theme-directory
+         (push (cdr (directory-files color-theme-directory t "^color-theme")) 
+               color-theme-libraries)))
+  (dolist (library color-theme-libraries)
+    (load library)))
 
+(when nil
+  (setq color-theme-directory "themes/"
+        color-theme-load-all-themes nil)
+  (color-theme-initialize)
+)
 ;; TODO: I don't like all those function names cluttering up my namespace.
 ;; Instead, a hashtable for the color-themes should be created. Now that 
 ;; define-color-theme is around, it should be easy to change in just the
