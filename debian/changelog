@@ -1,3 +1,10 @@
+color-theme-el (6.6.0-3) unstable; urgency=low
+
+  * Updated to official 6.6.0 RELEASE "Back in the business"
+  * Added more docs to install
+ 
+ -- Xavier Maillard <zedek@gnu.org>  Sun, 28 May 2006 15:25:55 +0200
+
 color-theme-el (6.6.0-2) unstable; urgency=low
 
   * Fixed several problems in the package.
