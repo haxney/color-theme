@@ -55,7 +55,7 @@ install: build
 	#install -d ${PKGDIR}${DOCDIR}
 
 	install -m 644 color-theme.el $(PKGDIR)$(LISPDIR)
-	install -m 644 themes/*.el $(PKGDIR)$(LISPDIR)/themes/
+	install -m 644 themes/*.el $(PKGDIR)$(LISPDIR)/themes
 	install -m 644 color-theme-autoloads.el $(PKGDIR)$(LISPDIR)
 
         # Other documentation

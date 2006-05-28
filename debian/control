@@ -1,7 +1,7 @@
 Source: color-theme-el
 Section: editors
 Priority: optional
-Maintainer: Basil Shubin <bashu@surgut.ru>
+Maintainer: Xavier Maillard <zedek@gnu.org>
 Build-Depends-Indep: debhelper (>= 4.0.0)
 Standards-Version: 3.6.2
 
