@@ -121,11 +121,11 @@ debian: dist
 	  dpkg-buildpackage -v$(LASTUPLOAD) $(BUILDOPTS) \
 	    -us -uc -rfakeroot && \
 	  echo "Running lintian ..." && \
-	  lintian -i ../color-theme-el_$(VERSION)*.deb || : && \
+	  lintian -i ../$(DEBNAME)*.deb || : && \
 	  echo "Done running lintian." && \
 	  debsign)
 	-rm -fr $(DISTDIR)
-	cp $(DEBNAME)_$(VERSION)* /var/spool/repo
+	cp $(DEBNAME)* /var/spool/repo
 	(cd /var/spool/repo && \
 	dpkg-scanpackages . /dev/null | gzip -9 > Packages.gz && \
 	dpkg-scansources . | gzip -9 > Sources.gz)
@@ -137,7 +137,7 @@ upload:
 	  echo close >> upload.lftp ; \
 	  lftp -f upload.lftp ; \
 	  rm -f upload.lftp)
-	(scp $(ZIPFILE).zip* $(TARBALL)* \
+	(scp $(ZIPFILE)* $(TARBALL)* \
             zeDek@download.gna.org:/upload/color-theme)
 
 release: debian tarball
