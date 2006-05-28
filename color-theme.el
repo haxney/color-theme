@@ -4,7 +4,7 @@
 ;; Copyright (C) 2000, 2001, 2002, 2003  Alex Schroeder <alex@gnu.org>
 ;; Copyright (C) 2003, 2004, 2005, 2006  Xavier Maillard <zedek@gnu.org>
 
-;; Version: 6.5.6
+;; Version: 6.6.0
 ;; Keywords: faces
 ;; Author: Jonadab the Unsightly One <jonadab@bright.net>
 ;; Maintainer: Xavier Maillard <zedek@gnu.org>
@@ -29,92 +29,8 @@
 
 ;;; Commentary:
 
-;; Sharing your current color setup:
-;;
-;; Use `color-theme-submit'.  If you have already invested time in
-;; customizing Emacs faces, please consider sharing your current setup.
-;; Make sure that color-theme.el is in your `load-path'.  Type M-x
-;; load-library RET color-theme RET to load all the functions.  Type M-x
-;; color-theme-submit RET and mail the result to the maintainer of this
-;; package (see above for mail addres).
-;;
-;; If you want to make sure that all your customization was exported,
-;; type M-x list-faces-display RET to get a list of all faces currently
-;; defined.  This is the list of faces that `color-theme-print' uses.
-
-;; Installing a color theme:
-;;
-;; Make sure that color-theme.el is in your `load-path'.  Type M-x
-;; load-library RET color-theme RET to load all the functions.
-;;
-;; The main function to call is color-theme-select.  Type M-x
-;; color-theme-select RET.  That creates a Color Theme Selection
-;; buffer.  Press RET or `i' on a color theme to install it for the
-;; rest of your session.
-;;
-;; If you want to install the color theme as soon as Emacs is started
-;; up, read the description of the theme you like and remember the
-;; name of the color theme function.  Press `d' on a color theme in
-;; the Color Theme Selection buffer to read the description.  Assuming
-;; you like the Gnome2 theme, you'll find that the function to use is
-;; called `color-theme-gnome2'.  Add the following to the end of your
-;; .emacs (removing the leading `;;').
-;;
-;; (require 'color-theme)
-;; (color-theme-gnome2)
-
-;; Changing menu colors:
-;;
-;; In Emacs 21 on X, you can set the menu colors and font using the
-;; menu face.  Example for your .emacs file:
-;;
-;;   (set-face-font 'menu "7x14")
-;;   (set-face-foreground 'menu "white").
-;;
-;; If are using X, you can set the menu foreground and background using
-;; a resource file, usually .Xdefaults or .Xresources.  Usually
-;; .Xdefaults is used when you start your session using a display
-;; manager such as xdm or gdm.  .Xresources is usually used when you
-;; start X directly via a shell script such as startx.  If you set
-;; Emacs*Background and Emacs*Foreground in such a resource file, the
-;; foreground and background of Emacs including the menu will be set.
-;; If your .emacs then loads a color theme, the foreground and
-;; background are changed -- with the exception of the menu.  There is
-;; no way to manipulate the menu foreground and background color from
-;; elisp.  You can also set more specific menu resources for Emacs in
-;; the resource file.  Here is a sample entry for your resource file:
-;;
-;;   Emacs*Background:		DarkSlateGray
-;;   Emacs*Foreground:		wheat
-
-;; Creating your own color theme:
-;;
-;; Use M-x customize-face and customize the faces.  Make sure to "Set
-;; for Current Session" -- you don't want to save these using custom!
-;; When you are done, call M-x color-theme-print to produce the elisp
-;; code required to recreate your theme.  Better yet, use M-x
-;; color-theme-submit to mail it to the maintainer.  That way it will be
-;; added to future versions of color-theme.el.
-;;
-;; For more information on the elisp format of a color theme, start with
-;; the documentation of `color-theme-install' using C-h f
-;; color-theme-install.
-;;
-;; When your color theme is just a variation of an existing color theme,
-;; take a look at `color-theme-robin-hood' in order to see an example of
-;; how to do it.  Essentially you want to call all the parent color
-;; themes before installing your changes.  For all but the first parent
-;; color theme, you need to make sure that `color-theme-is-cumulative'
-;; is bound to t.  If you don't do that, users that set
-;; `color-theme-is-cumulative' to nil will only install your changes
-;; without the parent color themes.
-
-;; Making a color theme work for both Emacs and XEmacs:
-;;
-;; Once you have printed the color-theme, you can make sure it looks
-;; similar in both Emacs and XEmacs by running
-;; `color-theme-analyze-defun' on the printed theme.  This function
-;; will check for missing faces for the other editor...
+;; Please read README and BUGS files for any relevant help.
+;; Contributors (not themers) should also read HACKING file.
 
 ;;; Thanks
 
@@ -125,74 +41,6 @@
 ;; Olgierd `Kingsajz' Ziolko <kingsajz@rpg.pl> for the spec-filter idea.
 ;; Brian Palmer for color-theme-library ideas and code
 ;; All the users that contributed their color themes.
-
-;;; Bugs:
-
-;; Emacs 20.7: Some faces are created using copy-face; these faces are
-;; not printed correctly using M-x color-theme-print.  They will have
-;; (nil) in their spec.  M-x customize-face has the same problem.
-;; Example:
-;; (copy-face 'bold 'new-bold)
-;; (color-theme-spec 'bold)
-;;   => (bold ((t (:bold t))))
-;; (color-theme-spec 'new-bold)
-;;   => (new-bold ((t (nil))))
-;;
-;; XEmacs 21.1: Some faces are defined using a certain font instead of
-;; of the correct attribute.  They will have (nil) in their spec.
-;; M-x customize-face has the same problem.
-;; Example:
-;; (color-theme-spec 'bold)
-;;   => (bold ((t (nil))))
-;;
-;; XEmacs 21.2 and up, Emacs 21: Not compatible with the custom-theme
-;; mode.  It should be easy to transform the color-theme source into
-;; custom-theme source, however.
-;;
-;; If you are running XEmacs, then only foreground and background color
-;; of the default face and only the background color of the text-cursor
-;; face will used.  This is due to the fact that these three pieces of
-;; information are stored as frame parameters in Emacs.
-;;
-;; If you are running XEmacs, variables cannot have a frame-local
-;; binding.  Therefore, if color-theme-is-global is set to nil, the
-;; variable settings in a color theme are ignored.
-;;
-;; Using Emacs and a non-nil value for color-theme-is-global will
-;; install a new color theme for all frames.  Using XEmacs and a non-nil
-;; value for color-theme-is-global will install a new color theme only
-;; on those frames that are not using a local color theme.
-;;
-;; If your system does not define the color names used, you will get the
-;; error "undefined color".  See the output of `list-colors-display' for
-;; a list of colors defined on your display.
-;;
-;; The :box, :height, and other new attributes will be honored in Emacs
-;; 21, but when you print such a color-theme on Emacs 20 or XEmacs 21,
-;; the information will get lost.  So don't do that.  Furthermore,
-;; customizing these faces may end up showing you a lisp expression
-;; instead of the real widgets on Emacs 20 or XEmacs 21 because these
-;; attributes are not understood.
-;;
-;; :inverse-video handling differs in Emacs and XEmacs.  We therefore do
-;; away with it.  When printing a color-theme, the inverse-video
-;; attribute should be handled correctly without ever appearing in color
-;; themes.  For maintenance, the following might be usefull for
-;; query-replace-regexp.
-;; :background "\([^"]*\)"\(.*\):foreground "\([^"]*\)"\(.*\) :inverse-video t
-;; :background "\3"\2:foreground "\1"\4
-;;
-;; In XEmacs 21.1, some of the face tests don't work.  Example:
-;; (custom-face-bold 'bold) returns nil on my system.  A bug report was
-;; submitted.
-;;
-;; Emacs 20 users will loose with new color themes, because these will
-;; set the colors of the default face only, leaving frame background
-;; untouched.  In Emacs 20, the colors of the default face and of the
-;; frame could be changed independently.  In Emacs 21, this is no longer
-;; true.  New color themes will not be made backwards compatible.
-;;
-;; This release was superficially tested with Emacs 21.x/22.x and XEmacs 21.4.
 
 
 
