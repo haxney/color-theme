@@ -1,0 +1,2 @@
+*.el usr/share/emacs/site-lisp/color-theme-el/
+themes/*.el usr/share/emacs/site-lisp/color-theme-el/themes/
