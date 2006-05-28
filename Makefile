@@ -14,7 +14,7 @@ ALLSOURCE := $(wildcard *.el) $(THEMES_FILES)
 SOURCE	= $(filter-out $(SPECIAL) $(UNCOMPILED) $(TESTING),$(ALLSOURCE))
 TARGET	= $(patsubst %.el,%.elc,$(SPECIAL) $(SOURCE))
 MANUAL  = color-theme
-MISC	= AUTHORS COPYING Makefile.defs Makefile $(AUTOLOADFILE).in
+MISC	= AUTHORS COPYING ChangeLog Makefile.defs Makefile $(AUTOLOADFILE).in
 #AUTHORS CREDITS HISTORY NEWS README Makefile ChangeLog \
 #ChangeLog.2005 ChangeLog.2004 ChangeLog.2003 ChangeLog.2002 \
 #ChangeLog.2001 servers.pl color-theme-auto.in color-theme.texi
@@ -25,7 +25,7 @@ lisp: clean $(TARGET)
 
 autoloads: $(AUTOLOADFILE).elc
 
-$(AUTOLOADFILE).el: $(AUTOLOADFILE).in $(TARGET)
+$(AUTOLOADFILE).el: $(AUTOLOADFILE).in #$(TARGET)
 	cp $(AUTOLOADFILE).in $(AUTOLOADFILE).el
 	rm -f $(AUTOLOADFILE).elc
 	@$(EMACS) -q $(SITEFLAG) -batch \
@@ -81,29 +81,25 @@ install-bin: lisp
 
 install: install-bin install-info
 
+## DO NOT TOUCH THIS !
+## HELPERS FOR MAINTAINER(S)
 distclean:
 	-rm  $(MANUAL).info $(MANUAL).html $(TARGET)
 	-rm -Rf ../$(DISTDIR)
 	-rm -f debian/dirs debian/files
-
-# dist: distclean
-# 	cvs checkout -r $(TAG) -d $(PROJECT)-$(VERSION) color-theme | \
-#         (mkdir -p ../$(PROJECT)-$(VERSION); cd ../$(PROJECT)-$(VERSION) && \
-#           tar xf -)
-# 	rm -fr ../$(PROJECT)-$(VERSION)/debian ../$(PROJECT)-$(VERSION)/test
-
-# From w3m-el
-dist: Makefile $(AUTOLOADFILE).elc
-        $(MAKE) tarball \
-          VERSION=`$(EMACS) $(SITEFLAG) -f w3mhack-version 2>/dev/null` \
-          BRANCH=`cvs status color-theme.el |grep "Sticky Tag:"|awk '{print $$3}'|sed 's,(none)\,HEAD,'`
-
-tarball: CVS/Root CVS/Repository
-	$(MAKE) distclean
-	-rm -fr ../$(PROJECT)-$(VERSION)/debian ../$(PROJECT)-$(VERSION)/test
 	-rm -rf $(DISTDIR) $(TARBALL) `basename $(TARBALL) .gz`
-	cvs -d `cat CVS/Root` -w export -d $(DISTDIR) -r $(BRANCH) `cat CVS/Repository`
+
+dist: distclean Makefile
+	-rm -fr ../$(PROJECT)-$(VERSION)/debian ../$(PROJECT)-$(VERSION)/test
+	$(MAKE) dist-prepare
+
+# Idea taken from w3m-el
+dist-prepare: CVS/Root CVS/Repository
+	cvs -d $(CVSROOT) -w export -d $(DISTDIR) -r $(CVSBRANCH) $(CVSMODULE)
 	-cvs diff |( cd $(DISTDIR) && patch -p0 )
+
+tarball: dist
+
         # for f in BUGS.ja w3m-e22.el; do\
 #           if [ -f $(DISTDIR)/$${f} ]; then\
 #             rm -f $(DISTDIR)/$${f} || exit 1;\
@@ -112,59 +108,37 @@ tarball: CVS/Root CVS/Repository
 	find $(DISTDIR) -name .cvsignore | xargs rm -f
 	find $(DISTDIR) -type d | xargs chmod 755
 	find $(DISTDIR) -type f | xargs chmod 644
-	cd $(DISTDIR) && autoconf
-	chmod 755 $(DISTDIR)/configure $(DISTDIR)/install-sh
+
 	tar -cf `basename $(TARBALL) .gz` $(DISTDIR)
 	gzip -9 `basename $(TARBALL) .gz`
+	zip -r $(ZIPFILE) $(DISTDIR)
+	gpg --detach $(TARBALL)
+	gpg --detach $(ZIPFILE)
 	rm -rf $(DISTDIR)
 
-debprepare: $(ALLSOURCE) $(SPECIAL) distclean
-	mkdir ../$(DISTDIR) && chmod 0755 ../$(DISTDIR)
-	cp $(ALLSOURCE) $(SPECIAL) $(MISC) ../$(DISTDIR)
-	cp -r themes ../$(DISTDIR)
-	test -d ../$(DISTDIR)/themes/.arch-ids && rm -R \
-	  ../$(DISTDIR)/themes/.arch-ids || :
-	test -d ../$(DISTDIR)/themes/CVS && rm -R \
-	  ../$(DISTDIR)/themes/.arch-ids || :
-
-debbuild:
-	(cd ../$(DISTDIR) && \
+debian: dist
+	(cd $(DISTDIR) && \
 	  dpkg-buildpackage -v$(LASTUPLOAD) $(BUILDOPTS) \
 	    -us -uc -rfakeroot && \
 	  echo "Running lintian ..." && \
 	  lintian -i ../color-theme-el_$(VERSION)*.deb || : && \
 	  echo "Done running lintian." && \
 	  debsign)
+	-rm -fr $(DISTDIR)
+	cp $(DEBNAME)_$(VERSION)* /var/spool/repo
+	(cd /var/spool/repo && \
+	dpkg-scanpackages . /dev/null | gzip -9 > Packages.gz && \
+	dpkg-scansources . | gzip -9 > Sources.gz)
 
-debrelease: debprepare
-	(cd .. && tar -czf color-theme_$(VERSION).orig.tar.gz $(DISTDIR))
-	cp -R debian ../$(DISTDIR)
-	test -d ../$(DISTDIR)/debian/CVS && rm -R \
-	  ../$(DISTDIR)/debian/CVS \
-	  ../$(DISTDIR)/debian/maint/CVS \
-	  ../$(DISTDIR)/debian/scripts/CVS || :
-	test -d ../$(DISTDIR)/debian/.arch-ids && rm -R \
-	  ../$(DISTDIR)/debian/.arch-ids \
-	  ../$(DISTDIR)/debian/maint/.arch-ids \
-	  ../$(DISTDIR)/debian/scripts/.arch-ids || :
-	$(MAKE) debbuild
-
-release: autoloads distclean
-	mkdir ../$(DISTDIR) && chmod 0755 ../$(DISTDIR)
-	cp $(SPECIAL) $(UNCOMPILED) $(SOURCE) $(MISC) ../$(DISTDIR)
-	cp -r themes ../color-theme-el-$(VERSION)/
-	test -d ../$(DISTDIR)/themes/CVS && \
-	  rm -R ../$(DISTDIR)/themes/CVS || :
-	test -d ../$(DISTDIR)/themes/.arch-ids && \
-	  rm -R ../$(DISTDIR)/themes/.arch-ids || :
-	(cd .. && tar czf color-theme-el-$(VERSION).tar.gz $(DISTDIR)/*; \
-	  zip -r color-theme-el-$(VERSION).zip $(DISTDIR))
-
-upload:
-	(cd .. && echo open ftp://upload.sourceforge.net > upload.lftp ; \
-	  echo cd /incoming >> upload.lftp ; \
-	  echo mput color-theme-$(VERSION).zip >> upload.lftp ; \
-	  echo mput color-theme-$(VERSION).tar.gz >> upload.lftp ; \
+upload: 
+	(cd /var/spool/repo && echo open perso.nerim.net > upload.lftp ; \
+	  echo cd /var/spool/repo >> upload.lftp ; \
+	  echo mput * >> upload.lftp ; \
 	  echo close >> upload.lftp ; \
 	  lftp -f upload.lftp ; \
 	  rm -f upload.lftp)
+	(scp $(ZIPFILE).zip* $(TARBALL)* \
+            zeDek@download.gna.org:/upload/color-theme)
+
+release: debian tarball
+	$(MAKE) upload
