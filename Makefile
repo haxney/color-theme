@@ -124,7 +124,9 @@ debian: dist
 	cp $(DEBNAME)* /var/spool/repo
 	(cd /var/spool/repo && \
 	dpkg-scanpackages . /dev/null | gzip -9 > Packages.gz && \
-	dpkg-scansources . | gzip -9 > Sources.gz)
+	dpkg-scansources . | gzip -9 > Sources.gz
+	apt-ftparchive release . > Release)
+	
 
 release: $(DEBNAME) $(TARBALL)
 	rm -rf $(DISTDIR)
