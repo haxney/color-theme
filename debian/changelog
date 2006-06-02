@@ -1,3 +1,9 @@
+color-theme-el (6.6.0-4) unstable; urgency=low
+
+  * Removed color-theme-el.install
+
+ -- Xavier Maillard <zedek@gnu.org>  Fri,  2 Jun 2006 23:49:11 +0200
+
 color-theme-el (6.6.0-3) unstable; urgency=low
 
   * Updated to official 6.6.0 RELEASE "Back in the business"
