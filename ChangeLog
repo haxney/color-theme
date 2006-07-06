@@ -1,3 +1,9 @@
+2006-07-05  Brian Palmer  <bpalmer@gmail.com>
+
+	* color-theme.el (color-theme-libraries): Use
+	file-name-as-directory and expand-file-name rather than concat to
+	make file names platform-neutral. 
+
 2006-06-02  Xavier Maillard  <zedek@gnu.org>
 
 	* Updated Debian package to 6.6.0-4

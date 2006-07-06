@@ -218,9 +218,11 @@ not be shown with all themes but yours."
   :group 'color-theme)
 
 (defcustom color-theme-libraries (directory-files 
-                                  (concat 
-                                   (file-name-directory (locate-library "color-theme"))
-                                   "/themes") t "^color-theme")
+                                  (file-name-as-directory 
+				   (expand-file-name 
+                                    "themes" 
+                                    (file-name-directory (locate-library "color-theme")))) 
+                                  t "^color-theme")
   "A list of files, which will be loaded in color-theme-initialize depending
 on `color-theme-load-all-themes' value. 
 This allows a user to prune the default color-themes (which can take a while
