@@ -1,0 +1,191 @@
+#title color-theme homepage
+#author "Xavier Maillard <xma@gnu.org>"
+#keywords color theme, GNU emacs, muse
+#project color-theme
+
+* Introduction
+
+color-theme-el is a GNU Emacs and XEmacs mode that provides nice and custom color
+themes. You can then easily change part or all of your faces in all the modes
+(providing the theme you use does effectivily define colors for the mode you
+are interested in).
+
+Here is a picture of what your GNU Emacs can look like:
+
+*NEED A PIC HERE*
+
+Latest version is 6.6.0
+
+* Download
+** Tarballs
+You can download color-theme from:
+
+ - http://download.savannah.nongnu.org/releases/color-theme/
+
+There are both tar and zip files.
+
+Note these files are gpg-signed (mandatory) against my key.
+
+To verify the integrity of the files, just do:
+
+<src lang="shell-script">
+gpg --verify <file.sig> <file>
+</src>
+
+Replace file with color-theme-6.6.0.tar.gz or color-theme-6.6.0.zip
+
+** Slackware package
+
+A SlackBuild script is available at your convenience either here or
+into the [[http://slackbuilds.org][slackbuilds.org]] project. I recommend any slackware
+user to use the powerful sbopkg.
+
+To use slackbuild script from slackbuilds.org website, it is as simple
+as running:
+
+<src lang="shell-script">
+sbopkg -r # update your package
+sbopkg -i color-theme-el
+sbopkg -i color-theme-extras-el
+</src>
+
+
+** Debian specific (DEPRECATED)
+
+Color theme has now his own Debian package named color-theme-el.
+This is not a Debian official package so do not report bugs against
+Debian. Use color theme project page for that.
+
+So to benefit from this package, add these lines into your /etc/apt/sources.list:
+
+Add this to your sources.list:
+
+ deb http://zedek.nerim.net/var/spool/repo ./ 
+ deb-src http://zedek.nerim.net/var/spool/repo ./
+
+Then, ensure my key is in your keyring.
+
+In general, you should have to add it:
+
+:1. gpg --recv-key 1E028EA5
+:2. gpg -a --export 1E028EA5 | sudo apt-key add -
+:3. Verify with: sudo apt-key list
+:4. apt-get update
+:5. apt-get install color-theme-el
+
+That should be enough.
+
+* Configuration
+
+This section suppose you have already installed color-theme-el either
+using the tarball or using a package manager.
+
+All you need to do in order to configure your color-theme-el package
+is to add this to your .emacs.el file:
+
+<src lang="emacs-lisp">
+(add-to-list 'load-path "/path/to/color-theme.el/file")
+(require 'color-theme)
+(eval-after-load "color-theme"
+  '(progn
+     (color-theme-initialize)
+     (color-theme-hober)))
+</src>
+
+Then you can choose your color-theme theme by issuing M-x
+color-theme-<TAB> RET
+
+
+* Notes
+
+** Grabbing CVS version (DEPRECATED)
+
+If you want to grab developement version out of CVS, just use this command:
+
+  :cvs -d:pserver:anonymous@cvs.gna.org:/cvs/color-theme co color-theme
+
+(For write access on the repository, ask it to me: zedek (at) gnu.org)
+
+Note: CVS has been dropped in favor of a more decentralized and robust SCM called Mercurial. More informations to come about the way to get the source code to you.
+
+** BUGS/Wishlist
+
+See the [[http://gna.org/bugs/?group=color-theme][bug-tracking]] interface for current bugs.
+Wishlist items are those with a severity of 1.
+
+Please use these tools to report problems and do not send mail personally to
+me. These tools are there in order to be able to track them all. On
+the contrary, my spam filter may catch your mail to me. So if you
+really want something to be added/fixed, use the Right tool.
+ 
+** Help & mailing-list
+
+You can find help on the [[http://www.emacswiki.org/cgi-bin/wiki/ColorTheme][EmacsWiki color-theme page]].
+
+For your convenience, we have created two mailing-list:
+
+1. One used to follow color-theme-el development
+2. One dedicated to common user questions, helps, contributions
+
+Please visit [[https://gna.org/mail/?group=color-theme][color-theme-el mailing-list page]] for instructions on subscribing to them.
+
+* Tasks
+** DONE Add color-theme.el to the download section
+   CLOSED: [2006-05-22 lun 00:00]
+  
+
+** DONE Create a website for Color Theme
+   CLOSED: [2006-05-28 dim 23:00]
+** DONE Add a header to color-theme-library.el
+   CLOSED: [2006-05-22 lun 00:01]
+** TODO Add info file
+** DONE Add README file
+   CLOSED: [2006-05-28 dim 22:14]
+** DONE Add NEWS file
+   CLOSED: [2006-05-28 dim 22:14]
+** TODO Add LEGAL/COPYING file (GPL license)
+   CLOSED: [2006-05-22 lun 00:07]
+** DONE Prepare 6.6.0 release
+   CLOSED: [2006-05-28 dim 22:14]
+** TODO Add distro specific build files
+** TODO Add THANKS list
+   Name it CREDITS.themes
+** TODO Cleanup code
+** TODO Post on gnu.emacs.source
+** DONE Add makefile
+   CLOSED: [2006-05-28 dim 23:00]
+** DONE Add autoload cookies
+   CLOSED: [2006-05-22 lun 00:19]
+
+** TODO Make color-theme-submit more intelligent
+   QUOTE: ask for theme name
+          add bytecompile directives
+          offer to add the theme in list of color-themes
+** TODO Add Makefile to ease installation
+** TODO Add distro build scripts
+** TODO Separate themes: one theme == one file
+
+** DONE Add HACKING notice
+   CLOSED: [2006-05-28 dim 23:01]
+** DONE Tag cvs with RELEASE_$(VERSION)
+   CLOSED: [2006-05-28 dim 23:01]
+** TODO Add TODO file
+** DONE Add BUGS file
+   CLOSED: [2006-05-28 dim 22:13]
+** TODO Report bugs on debian against emacs-goodies-el
+   Ask for color-theme.el removal
+** TODO ITP on Debian for color-theme-el
+** DONE Put color-theme-library.el into themes
+   CLOSED: [2006-05-28 dim 22:13]
+** TODO Split color-theme-library.el
+   Split it into as many theme files as there are themes
+** TODO Rework all themes so that it uses define-color-theme
+
+
+** TODO Inform users/developpers of CVS to Mercurial migration
+** TODO Add a small tutorial to use color-theme-el mercurial repository
+** TODO Inform users of mailing-lists existence
+** TODO Add slackbuild
+** TODO Change debian repository from nerim to gna
+   QUOTE: follow [[https://gna.org/cookbook/?func=detailitem&item_id=118]["Creating an apt repo on Gna!"]]
+

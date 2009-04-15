@@ -1,0 +1,146 @@
+#title color-theme homepage
+#author "Xavier Maillard <xma@gnu.org>"
+#keywords color theme, GNU emacs, muse
+#project color-theme
+#lastchange 2009-04-14 [00:30]
+
+* Introduction
+
+color-theme-el is a GNU Emacs and XEmacs mode that provides nice and custom color
+themes. You can then easily change part or all of your faces in all the modes
+(providing the theme you use does effectivily define colors for the mode you
+are interested in).
+
+* Releases
+
+** Current stable release
+
+Current stable release is 6.6.0
+
+** Future versions
+
+Describe plans here.
+
+* Download
+** Tarballs
+You can download color-theme from:
+
+ http://download.savannah.nongnu.org/releases/color-theme/
+
+There are both tar and zip files.
+
+Note these files are gpg-signed (mandatory) against my key.
+
+To verify the integrity of the files, just do:
+
+<src lang="shell-script">
+gpg --verify <file.sig> <file>
+</src>
+
+Replace file with color-theme-6.6.0.tar.gz or color-theme-6.6.0.zip
+
+** Slackware package
+
+A SlackBuild script is available at your convenience either here or
+into the [[http://slackbuilds.org][slackbuilds.org]] project. I recommend any slackware
+user to use the powerful sbopkg.
+
+To use slackbuild script from slackbuilds.org website, it is as simple
+as running:
+
+<src lang="shell-script">
+sbopkg -r # update your package
+sbopkg -i color-theme-el
+sbopkg -i color-theme-extras-el
+</src>
+
+
+** Debian specific (out of date)
+
+Color theme has now his own Debian package named color-theme-el.
+This is not a Debian official package so do not report bugs against
+Debian. Use color theme project page for that.
+
+So to benefit from this package, add these lines into your /etc/apt/sources.list:
+
+Add this to your sources.list:
+
+<src lang="shell-script">
+deb http://zedek.nerim.net/var/spool/repo ./ 
+deb-src http://zedek.nerim.net/var/spool/repo ./
+</src>
+
+Then, ensure my key is in your keyring.
+
+In general, you should have to add it:
+
+:1. gpg --recv-key 1E028EA5
+:2. gpg -a --export 1E028EA5 | sudo apt-key add -
+:3. Verify with: sudo apt-key list
+:4. apt-get update
+:5. apt-get install color-theme-el
+
+That should be enough.
+
+* Configuration
+
+This section suppose you have already installed color-theme-el either
+using the tarball or using a package manager.
+
+All you need to do in order to configure your color-theme-el package
+is to add this to your .emacs.el file:
+
+<src lang="emacs-lisp">
+(add-to-list 'load-path "/path/to/color-theme.el/file")
+(require 'color-theme)
+(eval-after-load "color-theme"
+  '(progn
+     (color-theme-initialize)
+     (color-theme-hober)))
+</src>
+
+Then you can choose your color-theme theme by issuing M-x
+color-theme-<TAB> RET
+
+
+* Specific notes
+
+** Development
+
+Development is hosted on [[http://savannah.nongnu.org/projects/color-theme][savannah color-theme project]].
+
+color-theme is using GNU Bazaar to ease interaction between
+developers.
+
+In order to submit your patches, you will need to branch from our
+repository and either send your patch or commit directly (provided you
+have been granted to do so).
+
+(For a write access onto the repository either bug me on savannah or
+ask it to me: mailto:xma@gnu.org?subject="write access in color-theme"
+
+** BUGS/Wishlist
+
+To track issues and bugs, we are using savannah bug-tracking system
+(see the menu). You can either consult current opened bugs, add one or
+fix one (best of all).
+
+Wishlist items are those with a severity of 1. You can submit a bug
+including the possible solution (patch).
+
+ Please use these tools to report problems and do not send mail
+ personally to me. These tools are there in order to be able to track
+ them all. On the contrary, my spam filter may catch your mail to me.
+ So if you really want something to be added/fixed, use the Right
+ tool.
+ 
+** Help & mailing-list
+
+You can find help on the [[http://www.emacswiki.org/cgi-bin/wiki/ColorTheme][EmacsWiki color-theme page]].
+
+For your convenience, we have created two mailing-list:
+
+ - One used to follow color-theme-el development
+ - One dedicated to common user questions, helps, contributions
+
+Please visit [[https://savannah.nongnu.org/mail/?group=color-theme][color-theme-el mailing-list page]] for instructions on subscribing to them.

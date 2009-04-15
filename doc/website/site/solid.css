@@ -1,0 +1,31 @@
+body { background-color: #ffffff; font: normal 85% "arial", "helvetica", sans-serif;}
+
+a {color: #0066cc; text-decoration: underline;}
+a:hover {color: #dd0000;}
+
+h1 {margin: 0; margin-bottom: 10px; padding: 10px; color: #ff9933; border: solid 1px #ff9933; border-top: solid 5px #ff9933; background-color: #eeeeee;}
+
+#toplinks {float: right;}
+
+#main {margin-top: 20px; padding: 0; padding-top: 3px; border-top: solid 1px #eeeeee;}
+
+#links {float: left; width: 18%; color: #666666;}
+#links ul {margin: 0; margin-left: 17px; padding: 0;}
+#links li {list-style: circle; margin-top: 2px; margin-bottom: 2px;}
+#links h3 {margin: 0; color: #666666; text-align: center; border-bottom: solid 1px #ff9933;}
+
+#body {margin-left: 20%; padding-left: 10px; border-left: solid 1px #eeeeee;}
+#body h3 {margin: 0; color: #666666; border-bottom: solid 1px #ff9933;}
+#body h4 {color: #666666;}
+
+#crumbs {margin-left: 50px; color: #666666;}
+#outside h1 img {padding-left: 70%; border: 0;}
+
+pre.code {width: 80%; padding: 7px; border: solid 1px #cccccc; background-color: #eeeeee;}
+
+#footer {clear: both; margin-top: 30px; text-align: center; padding: 2px; color: #ff9933; border: solid 1px #ff9933; border-bottom: solid 5px #ff9933; background-color: #eeeeee;}
+#footer h5 {margin: 0; color: #666666;}
+
+.return {float: right;}
+
+del { text-decoration: line-through; }
